@@ -12,10 +12,18 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// ===== 即時預覽 campaign =====
+// ===== 參數規格化 =====
+// 1. 前後去空白  2. 全轉小寫  3. 空格 → 底線
+
+function normalizeParam(str) {
+  return str.trim().toLowerCase().replace(/\s+/g, '_');
+}
+
+// ===== 即時預覽 campaign（顯示規格化後的值）=====
 
 function updateCampaignPreview() {
-  const val     = document.getElementById('event_name').value.trim();
+  const raw     = document.getElementById('event_name').value;
+  const val     = normalizeParam(raw);
   const preview = document.getElementById('campaign-preview');
 
   if (!val) {
@@ -24,7 +32,7 @@ function updateCampaignPreview() {
     return;
   }
 
-  preview.textContent = val;
+  preview.textContent = val;          // 預覽已規格化的結果
 
   if (containsUTMKeyword(val) || containsFullWidth(val)) {
     preview.classList.add('preview-error');
@@ -40,11 +48,18 @@ function updateCampaignPreview() {
 function generateUTM() {
   clearErrors();
 
-  const campaignRaw = document.getElementById('event_name').value.trim();
-  const creativeRaw = document.getElementById('creative_name').value.trim();
-  const audienceRaw = document.getElementById('audience_name').value.trim();
+  // ── 0. 讀取 → 規格化（trim + lowercase + 空格→底線）──
+  const campaignRaw = normalizeParam(document.getElementById('event_name').value);
+  const creativeRaw = normalizeParam(document.getElementById('creative_name').value);
+  const audienceRaw = normalizeParam(document.getElementById('audience_name').value);
   const landingRaw  = document.getElementById('landing_url').value.trim();
   const debugMode   = document.getElementById('debug_mode').checked;
+
+  // 規格化後寫回輸入框，讓使用者看到最終值
+  document.getElementById('event_name').value    = campaignRaw;
+  document.getElementById('creative_name').value = creativeRaw;
+  document.getElementById('audience_name').value = audienceRaw;
+  updateCampaignPreview();   // 同步更新預覽
 
   // ── 1. 空值檢查 ──
   const fields = [
@@ -165,7 +180,7 @@ function copyValue(elementId, btn) {
   const showCopied = () => {
     const isMain = btn.classList.contains('btn-copy-main');
     const original = btn.textContent;
-    btn.textContent = isMain ? '已複製 ✓' : '已複製 ✓';
+    btn.textContent = isMain ? '✅ 已複製！' : '✅ 複製成功';
     btn.classList.add('copied');
     setTimeout(() => {
       btn.textContent = original;

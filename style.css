@@ -302,18 +302,25 @@ input[type="url"].error { border-color: var(--danger); }
   width: 100%;
   background: var(--success);
   color: #fff;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 14px;
+  font-size: 17px;
+  font-weight: 800;
+  padding: 16px;
   border-radius: var(--radius-sm);
-  box-shadow: 0 4px 12px rgba(22,163,74,0.25);
+  box-shadow: 0 4px 16px rgba(22,163,74,0.30);
   margin-bottom: 20px;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
+  gap: 8px;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
 }
-.btn-copy-main:hover { background: #15803d; }
+.btn-copy-main:hover {
+  background: #15803d;
+  box-shadow: 0 6px 20px rgba(22,163,74,0.35);
+}
+.btn-copy-main:active { transform: scale(0.97); }
 .btn-copy-main.copied {
   background: #15803d;
   box-shadow: none;
+  letter-spacing: 0.5px;
 }
 
 /* ===== Result Section ===== */
