@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mini Queen UTM 產生器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-brand">MQ</div>
+      <div class="header-text">
+        <h1>Mini Queen UTM 產生器</h1>
+        <p class="subtitle">Meta Ads 廣告追蹤連結產生工具</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="card form-section">
+        <h2>設定參數</h2>
+
+        <!-- 固定值區塊 -->
+        <div class="fixed-row">
+          <div class="fixed-field">
+            <span class="fixed-label">utm_source</span>
+            <span class="fixed-value">facebook</span>
+          </div>
+          <div class="fixed-field">
+            <span class="fixed-label">utm_medium</span>
+            <span class="fixed-value">ads</span>
+          </div>
+        </div>
+
+        <!-- utm_campaign -->
+        <div class="section-divider"><span>utm_campaign</span></div>
+
+        <div class="campaign-preview-row">
+          <span class="campaign-preview-label">預覽：</span>
+          <code id="campaign-preview" class="campaign-preview-value">—</code>
+        </div>
+
+        <div class="field-group full-width">
+          <label for="event_name">活動名稱 <span class="required">*</span></label>
+          <input
+            type="text"
+            id="event_name"
+            placeholder="例如：mothers-day-2025 / 母親節"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <span class="field-hint">不可包含 utm= 字樣，不可使用全形符號</span>
+        </div>
+
+        <!-- utm_content & utm_term -->
+        <div class="section-divider"><span>utm_content &amp; utm_term</span></div>
+
+        <div class="form-grid">
+          <div class="field-group">
+            <label for="creative_name">素材名稱 → utm_content <span class="required">*</span></label>
+            <input
+              type="text"
+              id="creative_name"
+              placeholder="例如：image1 / video1 / kol-a"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <span class="field-hint">不可使用全形符號</span>
+          </div>
+
+          <div class="field-group">
+            <label for="audience_name">受眾描述 → utm_term <span class="required">*</span></label>
+            <input
+              type="text"
+              id="audience_name"
+              placeholder="例如：新客25-45 / 舊客ATC14"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <span class="field-hint">不可使用全形符號</span>
+          </div>
+        </div>
+
+        <!-- Landing URL -->
+        <div class="section-divider"><span>目標網址</span></div>
+
+        <div class="field-group full-width">
+          <label for="landing_url">Landing Page URL <span class="required">*</span></label>
+          <input
+            type="url"
+            id="landing_url"
+            placeholder="https://example.com/product"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <span class="field-hint">請輸入完整網址（包含 https://）</span>
+        </div>
+
+        <!-- GA4 Debug Mode -->
+        <div class="checkbox-row">
+          <label class="checkbox-label" for="debug_mode">
+            <input type="checkbox" id="debug_mode">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">
+              GA4 偵錯模式 (Debug Mode)
+              <span class="checkbox-hint">勾選後網址會加入 &amp;debug_mode=true</span>
+            </span>
+          </label>
+        </div>
+
+        <div id="error-msg" class="error-msg" role="alert" aria-live="polite"></div>
+
+        <button id="generate-btn" class="btn btn-primary btn-generate" onclick="generateUTM()">
+          產生 UTM
+        </button>
+      </section>
+
+      <!-- 結果區塊 -->
+      <section class="card result-section" id="result-section" style="display:none;">
+        <h2>產出結果</h2>
+
+        <!-- 91APP 提示 -->
+        <div id="notice-91app" class="notice notice-91app" style="display:none;">
+          偵測到 91APP 網址（/v2/official/）：UTM 參數已自動排在最前面，防止跳轉後被洗掉。
+        </div>
+
+        <!-- 一鍵複製完整網址（主按鈕） -->
+        <button class="btn btn-copy-main" onclick="copyValue('out-full-url', this)">
+          一鍵複製完整網址
+        </button>
+
+        <div class="result-item">
+          <div class="result-label">完整 URL</div>
+          <div class="result-row">
+            <code id="out-full-url" class="result-value full-url-value"></code>
+            <button class="btn btn-copy" onclick="copyValue('out-full-url', this)">複製</button>
+          </div>
+        </div>
+
+        <div class="result-divider"></div>
+
+        <div class="result-item">
+          <div class="result-label">utm_campaign</div>
+          <div class="result-row">
+            <code id="out-campaign" class="result-value"></code>
+            <button class="btn btn-copy" onclick="copyValue('out-campaign', this)">複製</button>
+          </div>
+        </div>
+
+        <div class="result-item">
+          <div class="result-label">utm_content</div>
+          <div class="result-row">
+            <code id="out-content" class="result-value"></code>
+            <button class="btn btn-copy" onclick="copyValue('out-content', this)">複製</button>
+          </div>
+        </div>
+
+        <div class="result-item">
+          <div class="result-label">utm_term</div>
+          <div class="result-row">
+            <code id="out-term" class="result-value"></code>
+            <button class="btn btn-copy" onclick="copyValue('out-term', this)">複製</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Mini Queen UTM Generator &copy; 2025</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
