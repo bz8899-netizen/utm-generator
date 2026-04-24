@@ -40,16 +40,45 @@
           <code id="campaign-preview" class="campaign-preview-value">—</code>
         </div>
 
-        <div class="field-group full-width">
-          <label for="event_name">活動名稱 <span class="required">*</span></label>
-          <input
-            type="text"
-            id="event_name"
-            placeholder="例如：mothers-day-2025 / 母親節"
-            autocomplete="off"
-            spellcheck="false"
-          >
-          <span class="field-hint">自動轉小寫、空格變底線 _ ｜不可包含 utm= 字樣、不可使用全形符號</span>
+        <!-- 日期 + 活動名稱 + 商品名稱 三欄 -->
+        <div class="form-grid form-grid-3">
+          <div class="field-group">
+            <label for="campaign_date">日期 <span class="required">*</span></label>
+            <input
+              type="text"
+              id="campaign_date"
+              placeholder="260424"
+              maxlength="6"
+              autocomplete="off"
+              spellcheck="false"
+              inputmode="numeric"
+            >
+            <span class="field-hint">YYMMDD，自動帶入今天</span>
+          </div>
+
+          <div class="field-group">
+            <label for="event_name">活動名稱 <span class="required">*</span></label>
+            <input
+              type="text"
+              id="event_name"
+              placeholder="例如：母親節"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <span class="field-hint">自動轉小寫、空格變底線 _</span>
+          </div>
+
+          <div class="field-group">
+            <label for="product_name">商品名稱 <span class="required">*</span></label>
+            <input
+              type="text"
+              id="product_name"
+              placeholder="例如：傾心吉兒"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <span class="field-hint">自動轉小寫、空格變底線 _</span>
+          </div>
         </div>
 
         <!-- utm_content & utm_term -->
@@ -65,7 +94,7 @@
               autocomplete="off"
               spellcheck="false"
             >
-            <span class="field-hint">自動轉小寫、空格變底線 _ ｜不可使用全形符號</span>
+            <span class="field-hint">自動轉小寫、空格變底線 _</span>
           </div>
 
           <div class="field-group">
@@ -73,11 +102,24 @@
             <input
               type="text"
               id="audience_name"
-              placeholder="例如：新客25-45 / 舊客ATC14"
+              list="audience-list"
+              placeholder="選擇或手動輸入受眾"
               autocomplete="off"
               spellcheck="false"
             >
-            <span class="field-hint">自動轉小寫、空格變底線 _ ｜不可使用全形符號</span>
+            <datalist id="audience-list">
+              <option value="新客_廣泛">
+              <option value="新客_25-45">
+              <option value="新客_LAL">
+              <option value="ATC_7天">
+              <option value="ATC_14天">
+              <option value="收單_購買">
+              <option value="收單_ATC">
+              <option value="舊客_回購">
+              <option value="再行銷_30天">
+              <option value="海外_廣泛">
+            </datalist>
+            <span class="field-hint">必須包含：新客 / ATC / 收單 / 舊客 / 再行銷 / 海外</span>
           </div>
         </div>
 
@@ -124,21 +166,45 @@
           偵測到 91APP 網址（/v2/official/）：UTM 參數已自動排在最前面，防止跳轉後被洗掉。
         </div>
 
-        <!-- 一鍵複製完整網址（主按鈕） -->
-        <button class="btn btn-copy-main" onclick="copyValue('out-full-url', this)">
-          🔗 複製完整連結
-        </button>
+        <!-- 輸出① 純 UTM 參數串 -->
+        <div class="output-block">
+          <div class="output-block-header">
+            <span class="output-block-label">① UTM 參數串</span>
+            <span class="output-block-hint">貼入 Meta 廣告「網址參數」欄位</span>
+          </div>
+          <button class="btn btn-copy-main btn-copy-utm" onclick="copyValue('out-utm-string', this)">
+            📋 複製 UTM 參數串
+          </button>
+          <div class="result-item">
+            <div class="result-row">
+              <code id="out-utm-string" class="result-value utm-string-value"></code>
+              <button class="btn btn-copy" onclick="copyValue('out-utm-string', this)">複製</button>
+            </div>
+          </div>
+        </div>
 
-        <div class="result-item">
-          <div class="result-label">完整 URL</div>
-          <div class="result-row">
-            <code id="out-full-url" class="result-value full-url-value"></code>
-            <button class="btn btn-copy" onclick="copyValue('out-full-url', this)">複製</button>
+        <div class="output-separator"></div>
+
+        <!-- 輸出② 完整網址 -->
+        <div class="output-block">
+          <div class="output-block-header">
+            <span class="output-block-label">② 完整追蹤網址</span>
+            <span class="output-block-hint">含 Landing Page，可直接貼入廣告連結</span>
+          </div>
+          <button class="btn btn-copy-main" onclick="copyValue('out-full-url', this)">
+            🔗 複製完整連結
+          </button>
+          <div class="result-item">
+            <div class="result-row">
+              <code id="out-full-url" class="result-value full-url-value"></code>
+              <button class="btn btn-copy" onclick="copyValue('out-full-url', this)">複製</button>
+            </div>
           </div>
         </div>
 
         <div class="result-divider"></div>
 
+        <!-- 各參數明細 -->
         <div class="result-item">
           <div class="result-label">utm_campaign</div>
           <div class="result-row">
